@@ -3,6 +3,8 @@ from .book_router import book_router
 from contextlib import asynccontextmanager
 from .database import engine,create_table
 from . import models
+from .auth_router import auth_router
+
 
 
 @asynccontextmanager
@@ -18,3 +20,4 @@ def read_root():
 
 
 app.include_router(book_router)
+app.include_router(auth_router)
