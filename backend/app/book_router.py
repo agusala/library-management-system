@@ -1,25 +1,29 @@
-from fastapi import APIRouter, HTTPException,status,Depends
+from fastapi import APIRouter, HTTPException,status,Depends,Query
 from .database import db_dep
 from .models import Book,BookCreate
 from .dependencies import get_current_user
 from . import models
 from sqlmodel import select
+from sqlalchemy import func
+from .schemas import BookListResponse
 
-book_router = APIRouter(prefix="/books",tags=["books"])
+book_router = APIRouter(prefix="/books",tags=["books"], redirect_slashes=False)
 
 @book_router.post("/", response_model=Book)
-def create_book(new_book:BookCreate,db:db_dep, current_user:get_current_user=Depends(get_current_user)):
+def create_book(new_book:BookCreate,db:db_dep, current_user:models.User=Depends(get_current_user)):
     book=Book(**new_book.model_dump(), owner_id=current_user.id)
     db.add(book)
     db.commit()
     db.refresh(book)
     return book
 
-@book_router.get("/",response_model=list[Book])
-def get_books(db:db_dep, current_user:models.User=Depends(get_current_user)):
-    statement = select(Book).where(Book.owner_id==current_user.id)
+@book_router.get("/",response_model=BookListResponse)
+def get_books(db:db_dep, current_user:models.User=Depends(get_current_user), limit: int=Query(10,ge=1,le=100),offset:int=Query(0,ge=0)):
+    statement = select(Book).where(Book.owner_id==current_user.id).offset(offset).limit(limit)
     books = db.exec(statement).all()
-    return books
+    total_statement=select(func.count()).where(Book.owner_id==current_user.id)
+    total=db.exec(total_statement).one()
+    return {"items":books,"total":total}
 
 @book_router.get("/{book_id}",response_model=Book)
 def get_book(book_id:int, db:db_dep, current_user:models.User=Depends(get_current_user)):
@@ -31,7 +35,7 @@ def get_book(book_id:int, db:db_dep, current_user:models.User=Depends(get_curren
 @book_router.put("/{book_id}",response_model=Book)
 def update_book(book_id:int, updated_book:BookCreate,db:db_dep,current_user:models.User=Depends(get_current_user)):
     book=db.get(Book,book_id)
-    if not book or book.owne_id!=current_user.id:
+    if not book or book.owner_id!=current_user.id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="libro no encontrado")
     book.titulo=updated_book.titulo
     book.autor=updated_book.autor

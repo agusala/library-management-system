@@ -1,4 +1,5 @@
 from pydantic import BaseModel,EmailStr
+from .models import Book
 
 class LoginRequest(BaseModel):
     email:EmailStr
@@ -22,3 +23,6 @@ class BookCreate(BookBase):
 class BookResponse(BookBase):
     id:int
     owner_id:int
+class BookListResponse(BaseModel):
+    items:list[Book]
+    total:int
