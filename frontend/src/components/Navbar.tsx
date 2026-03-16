@@ -11,7 +11,7 @@ export const Navbar =()=>{
         navigate("/")
     }
     return(
-        <AppBar position="static">
+        <AppBar position="static"color="primary" sx={{width:"100%"}}>
             <Toolbar>
                 <Typography variant="h6" component="div" sx={{flexGrow:1}}>
                     <Button color="inherit" component={RouterLink} to="/"> 
@@ -19,6 +19,7 @@ export const Navbar =()=>{
                     </Button>
                 </Typography>
                 <Box>
+                    {user?.role === 'admin' && (<Button color="inherit" component={RouterLink} to="/admin">Admin</Button>)}
                     {!user?(
                         <Button color="inherit" component={RouterLink} to="/login">
                             Login

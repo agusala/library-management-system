@@ -2,12 +2,68 @@ import { createTheme } from "@mui/material";
 
 const theme = createTheme({
     palette:{
+        background:{
+            default:"#FFFBF2",
+        },
         primary:{
-            main:'#1976d2'
+            main:"#8E44AD",
+            contrastText:"#FFFFFF", 
         },
-        secondary:{
-            main:'#dc004e',
+        text:{
+            primary:"#2E2E2E",
         },
+        action:{
+                    active:"#2E2E2E",
+        },
+    },
+    typography:{
+        fontFamily:"'Roboto','Helvetica', 'Arial', 'sans-serif'",
+        h1:{
+            fontSize:"2.5rem",
+            fontWeight:"600",
+        },
+        h2:{
+            fontSize:"2rem",
+            fontWeight:500,
+        },
+        h3:{
+            fontSize:"1.75rem",
+            fontWeight:500
+        },
+        body1:{
+            fontSize:"1rem",
+            lineHeight:1.5
+        },
+        body2:{
+            fontSize:"0.875rem",
+            lineHeight:1.43,
+        },
+        button:{
+            textTransform:"none",
+            fontWeight:500
+        },
+    },
+    components:{
+        MuiAppBar:{
+            styleOverrides:{
+                root:{
+                    backgroundColor:"#8E44AD",
+                }
+            }
+        },
+        MuiButton:{
+            styleOverrides:{
+                containedPrimary:{
+                    backgroundColor:"#8E44AD",
+                    '&:hover':{
+                    backgroundColor:"#6C3483",
+                    }
+                }
+            }
+        },
+        MuiIconButton:{
+            
+        }
     }
 })
 export default theme

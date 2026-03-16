@@ -48,7 +48,7 @@ export const MisLibros=()=>{
         setModalOpen(false)
         setEditingBook(null)
     }
-    const handleSaveBook = async (bookData: { titulo: string; autor: string }) => {
+    const handleSaveBook = async (bookData: { titulo: string; autor: string,fecha_publicacion:string }) => {
     try {
       if (editingBook) {
         await api.put(`/books/${editingBook.id}`, bookData);
@@ -81,6 +81,7 @@ export const MisLibros=()=>{
     setDeletConfirm(null);
   };
   return(
+    <Box sx={{flexGrow:1, p:3}}>
     <Container maxWidth="lg" sx={{mt:4}}>
 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
 <Typography variant="h4">
@@ -94,6 +95,7 @@ export const MisLibros=()=>{
         <TableRow>    
             <TableCell>Titulo</TableCell>
             <TableCell>Autor</TableCell>
+            <TableCell>Fecha de Publicacion</TableCell>
             <TableCell align="right">Acciones</TableCell>
         </TableRow>
         </TableHead>
@@ -102,6 +104,7 @@ export const MisLibros=()=>{
                 <TableRow key={book.id}>
                     <TableCell>{book.titulo}</TableCell>
                     <TableCell>{book.autor}</TableCell>
+                    <TableCell>{new Date(book.fecha_publicacion).toDateString()}</TableCell>
                     <TableCell align="right">
                         <IconButton color="primary" onClick={()=>handleOpenEditModal(book)}><Edit/></IconButton>
                         <IconButton color="error" onClick={()=>handleDeleteClick(book)}><Delete/></IconButton>
@@ -128,4 +131,5 @@ export const MisLibros=()=>{
     </Box>
 )}
 
-    </Container>)}
+    </Container>
+    </Box>)}

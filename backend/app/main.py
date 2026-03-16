@@ -5,11 +5,7 @@ from contextlib import asynccontextmanager
 from .database import engine,create_table
 from . import models
 from .auth_router import auth_router
-
-@asynccontextmanager
-async def lifespan(app:FastAPI):
-    create_table()
-    yield
+from .admin_router import admin_router
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
@@ -29,6 +25,7 @@ app.add_middleware(
 
 app.include_router(book_router)
 app.include_router(auth_router)
+app.include_router(admin_router)
 
 @app.get("/")
 def read_root():

@@ -5,6 +5,7 @@ from .crud import autenticate_user,create_user,get_user_by_email
 from .jwt_handler import create_access_token
 from .dependencies import get_current_user
 from . import models
+from sqlalchemy.exc import IntegrityError
 
 auth_router = APIRouter(prefix="/auth",tags=["auth"])
 
@@ -19,11 +20,15 @@ def register(user_data:UserCreate,db:db_dep):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,detail="email ya registrado"
         )
-    user=create_user(db,user_data.nombre,user_data.email,user_data.password)
+    print(f"Password recibida: {user_data.password}")
+    try: user=create_user(db,user_data.nombre,user_data.email,user_data.password)
+    except IntegrityError:
+        raise HTTPException(status_code=400, detail="email ya registrado")
     return{
         "id":user.id,
         "nombre":user.nombre,
-        "email":user.email
+        "email":user.email,
+        "role":user.role
     }
     
 

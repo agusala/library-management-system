@@ -2,11 +2,13 @@ export interface User {
     id: number;
     nombre:string;
     email: string
+    role:"user"|"admin"
 }
 export interface Book{
     id:number;
     titulo:string;
     autor:string;
+    fecha_publicacion: string;
     owner_id:number
 }
 export interface LoginCredentials{
